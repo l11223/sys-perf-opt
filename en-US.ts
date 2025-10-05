@@ -25,7 +25,10 @@ export default {
         denylist_disabled: 'Disabled',
         denylist_enforced: 'Enforced',
         denylist_just_umount: 'Unmount Only',
-        use_zn_linker: 'Use Zygisk Next linker (Experimental)',
+        anonymous_memory: 'Use anonymous memory',
+        anonymous_memory_desc: 'Load modules into anonymous memory. This compromises log readability but circumvents certain outdated detection mechanisms.',
+        zn_linker: 'Use Zygisk Next linker (Experimental)',
+        zn_linker_desc: 'Use built-in linker instead of the system linker to load modules. This will enhance stealth but may cause compatibility issues.',
     },
     zygote_inject_state: {
         running: 'Running',

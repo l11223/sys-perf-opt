@@ -25,7 +25,10 @@ export default {
         denylist_disabled: '關閉',
         denylist_enforced: '強制',
         denylist_just_umount: '僅還原掛載',
-        use_zn_linker: '使用 Zygisk Next 連結器（實驗性）',
+        anonymous_memory: '使用匿名記憶體',
+        anonymous_memory_desc: '將模組載入到匿名記憶體。這會破壞日誌可讀性，但能避免一些過時的偵測。',
+        zn_linker: '使用 Zygisk Next 連結器（實驗性）',
+        zn_linker_desc: '使用內建連結器替代系統連結器載入模組，增強隱蔽性但可能導致相容性問題。',
     },
     zygote_inject_state: {
         running: '執行中',
