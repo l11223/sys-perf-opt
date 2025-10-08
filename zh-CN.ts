@@ -20,6 +20,7 @@ export default {
     },
     settings: {
         log_to_kernel: '日志写入 dmesg（仅供开发者使用）',
+        nonroot_as_denylist: '将非 Root 应用视为排除列表',
         enforce_denylist: '排除列表策略',
         enforce_denylist_desc: '强制：还原对位于排除列表中的 App 做出的所有变更。<br/>仅还原挂载：仅还原对位于排除列表中的 App 做出的挂载变更。',
         denylist_disabled: '关闭',

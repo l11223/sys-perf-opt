@@ -20,6 +20,7 @@ export default {
     },
     settings: {
         log_to_kernel: 'Log to dmesg (Only for developers)',
+        nonroot_as_denylist: 'Treat non-root apps as denylist',
         enforce_denylist: 'Denylist Policy',
         enforce_denylist_desc: 'Enforced: any modification for apps in denylist will be reverted.<br/>Umount Only: only mount modifications for apps in denylist will be reverted.',
         denylist_disabled: 'Disabled',
