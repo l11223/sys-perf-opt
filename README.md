@@ -38,6 +38,10 @@ The following conditions now apply:
 + Minimal version: 26402
 + Built-in Zygisk turned off
 
+### APatch
+
++ Minimal version: 10700
+
 ## Compatibility
 
 Zygisk Next only guarantees the same behavior of Zygisk API, but will NOT ensure Magisk's internal features.
