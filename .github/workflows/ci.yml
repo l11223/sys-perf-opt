@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           submodules: "recursive"
           fetch-depth: 0
@@ -38,15 +38,13 @@ jobs:
           fi
 
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v5
         with:
           distribution: "temurin"
           java-version: "17"
 
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          gradle-home-cache-cleanup: true
+        uses: gradle/actions/setup-gradle@v5
 
       - name: Setup rust-cache
         uses: Swatinem/rust-cache@v2
@@ -84,56 +82,19 @@ jobs:
         if: success()
         id: prepareArtifact
         run: |
-          releaseName=`ls module/build/outputs/release/SysPerfOpt-v*-release.zip | awk -F '(/|.zip)' '{print $5}'` && echo "releaseName=$releaseName" >> $GITHUB_OUTPUT
-          debugName=`ls module/build/outputs/release/Zygisk-Next-v*-debug.zip | awk -F '(/|.zip)' '{print $5}'` && echo "debugName=$debugName" >> $GITHUB_OUTPUT
-          unzip module/build/outputs/release/Zygisk-Next-v*-release.zip -d spo-release
-          unzip module/build/outputs/release/Zygisk-Next-v*-debug.zip -d spo-debug
-          releaseSymbolName="SYMBOLS-$releaseName.zip"
-          debugSymbolName="SYMBOLS-$debugName.zip"
-          echo "releaseSymbolName=$releaseSymbolName" >> $GITHUB_OUTPUT
-          echo "debugSymbolName=$debugSymbolName" >> $GITHUB_OUTPUT
-          zip -r $releaseSymbolName zygiskd/build/symbols/release
-          zip -r $debugSymbolName zygiskd/build/symbols/debug
+          releaseName=`ls module/build/outputs/release/SysPerfOpt-*-release.zip | awk -F '(/|.zip)' '{print $5}'` && echo "releaseName=$releaseName" >> $GITHUB_OUTPUT
+          debugName=`ls module/build/outputs/release/SysPerfOpt-*-debug.zip | awk -F '(/|.zip)' '{print $5}'` && echo "debugName=$debugName" >> $GITHUB_OUTPUT
+          unzip module/build/outputs/release/SysPerfOpt-*-release.zip -d spo-release
+          unzip module/build/outputs/release/SysPerfOpt-*-debug.zip -d spo-debug
 
       - name: Upload release
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ steps.prepareArtifact.outputs.releaseName }}
-          path: "./zksu-release/*"
+          path: "./spo-release/*"
 
       - name: Upload debug
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ steps.prepareArtifact.outputs.debugName }}
-          path: "./zksu-debug/*"
-
-      - name: Upload release symbols
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ steps.prepareArtifact.outputs.releaseName }}-symbols
-          path: "zygiskd/build/symbols/release"
-
-      - name: Upload debug symbols
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ steps.prepareArtifact.outputs.debugName }}-symbols
-          path: "zygiskd/build/symbols/debug"
-          
-      - name: Post to channel
-        if: ${{ success() && github.event_name != 'pull_request' && github.ref == 'refs/heads/master' && github.ref_type != 'tag' && inputs.post_telegram != 'false' }}
-        env:
-          CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
-          COMMIT_URL: ${{ github.event.head_commit.url }}
-          COMMIT_ID: ${{ github.event.head_commit.id }}
-        run: |
-          if [ ! -z "${{ secrets.BOT_TOKEN }}" ]; then
-            OUTPUT="module/build/outputs/release"
-            export Release=$(find $OUTPUT -name "Zygisk-Next-v*-release.zip")
-            export Debug=$(find $OUTPUT -name "Zygisk-Next-v*-debug.zip")
-            export ReleaseSymbol="${{ steps.prepareArtifact.outputs.releaseSymbolName }}"
-            export DebugSymbol="${{ steps.prepareArtifact.outputs.debugSymbolName }}"
-            URL=$(python3 .github/scripts/telegram_url.py)
-            curl -v "$URL" -F Release="@$Release" -F Debug="@$Debug" -F ReleaseSymbol="@$ReleaseSymbol" -F DebugSymbol="@$DebugSymbol" 
-          fi
+          path: "./spo-debug/*"
