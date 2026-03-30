@@ -11,7 +11,7 @@
 # define LP_SELECT(lp32, lp64) lp32
 #endif
 
-constexpr auto kCPSocketName = "/" LP_SELECT("cp32", "cp64") ".sock";
+constexpr auto kCPSocketName = "/" LP_SELECT("po32", "po64") ".sock";
 
 class UniqueFd {
     using Fd = int;

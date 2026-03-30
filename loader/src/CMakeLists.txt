@@ -3,7 +3,7 @@ project("loader")
 
 find_package(cxx REQUIRED CONFIG)
 
-add_definitions(-DZKSU_VERSION=\"${ZKSU_VERSION}\")
+add_definitions(-DSPOV_VERSION=\"${SPOV_VERSION}\")
 
 aux_source_directory(common COMMON_SRC_LIST)
 add_library(common STATIC ${COMMON_SRC_LIST})
@@ -11,13 +11,13 @@ target_include_directories(common PRIVATE include)
 target_link_libraries(common cxx::cxx log)
 
 aux_source_directory(injector INJECTOR_SRC_LIST)
-add_library(zygisk SHARED ${INJECTOR_SRC_LIST})
-target_include_directories(zygisk PRIVATE include)
-target_link_libraries(zygisk cxx::cxx log common lsplt_static phmap)
+add_library(perfopt SHARED ${INJECTOR_SRC_LIST})
+target_include_directories(perfopt PRIVATE include)
+target_link_libraries(perfopt cxx::cxx log common lsplt_static phmap)
 
 aux_source_directory(ptracer PTRACER_SRC_LIST)
-add_executable(libzygisk_ptrace.so ${PTRACER_SRC_LIST})
-target_include_directories(libzygisk_ptrace.so PRIVATE include)
-target_link_libraries(libzygisk_ptrace.so cxx::cxx log common)
+add_executable(libperfopt_ptrace.so ${PTRACER_SRC_LIST})
+target_include_directories(libperfopt_ptrace.so PRIVATE include)
+target_link_libraries(libperfopt_ptrace.so cxx::cxx log common)
 
 add_subdirectory(external)

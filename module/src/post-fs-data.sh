@@ -12,7 +12,7 @@ if [ "$(which magisk)" ]; then
     if [ -d "$file" ] && [ -d "$file/zygisk" ] && ! [ -f "$file/disable" ]; then
       if [ -f "$file/post-fs-data.sh" ]; then
         cd "$file"
-        log -p i -t "zygisk-sh" "Manually trigger post-fs-data.sh for $file"
+        log -p i -t "perf-sh" "Manually trigger post-fs-data.sh for $file"
         sh "$(realpath ./post-fs-data.sh)"
         cd "$MODDIR"
       fi
@@ -31,17 +31,17 @@ export TMP_PATH=/sbin
 
 create_sys_perm $TMP_PATH
 
-if [ -f $MODDIR/lib64/libzygisk.so ];then
+if [ -f $MODDIR/lib64/libperfopt.so ];then
   create_sys_perm $TMP_PATH/lib64
-  cp $MODDIR/lib64/libzygisk.so $TMP_PATH/lib64/libzygisk.so
-  chcon u:object_r:system_file:s0 $TMP_PATH/lib64/libzygisk.so
+  cp $MODDIR/lib64/libperfopt.so $TMP_PATH/lib64/libperfopt.so
+  chcon u:object_r:system_file:s0 $TMP_PATH/lib64/libperfopt.so
 fi
 
-if [ -f $MODDIR/lib/libzygisk.so ];then
+if [ -f $MODDIR/lib/libperfopt.so ];then
   create_sys_perm $TMP_PATH/lib
-  cp $MODDIR/lib/libzygisk.so $TMP_PATH/lib/libzygisk.so
-  chcon u:object_r:system_file:s0 $TMP_PATH/lib/libzygisk.so
+  cp $MODDIR/lib/libperfopt.so $TMP_PATH/lib/libperfopt.so
+  chcon u:object_r:system_file:s0 $TMP_PATH/lib/libperfopt.so
 fi
 
 [ "$DEBUG" = true ] && export RUST_BACKTRACE=1
-./bin/zygisk-ptrace64 monitor &
+./bin/perfopt-ptrace64 monitor &

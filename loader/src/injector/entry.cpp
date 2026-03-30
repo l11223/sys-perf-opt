@@ -9,12 +9,12 @@ void *self_handle = nullptr;
 
 extern "C" [[gnu::visibility("default")]]
 void entry(void* handle, const char* path) {
-    LOGI("Zygisk library injected, version %s", ZKSU_VERSION);
+    LOGI("Library injected, version %s", SPOV_VERSION);
     self_handle = handle;
     zygiskd::Init(path);
 
     if (!zygiskd::PingHeartbeat()) {
-        LOGE("Zygisk daemon is not running");
+        LOGE("Daemon is not running");
         return;
     }
 

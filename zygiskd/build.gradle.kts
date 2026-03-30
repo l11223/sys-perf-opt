@@ -17,8 +17,8 @@ android.buildFeatures {
 
 cargo {
     module = "."
-    libname = "zygiskd"
-    targetIncludes = arrayOf("zygiskd")
+    libname = "perfoptd"
+    targetIncludes = arrayOf("perfoptd")
     targets = listOf("arm64", "arm", "x86", "x86_64")
     targetDirectory = "build/intermediates/rust"
     val isDebug = gradle.startParameter.taskNames.any { it.toLowerCase().contains("debug") }
@@ -28,7 +28,7 @@ cargo {
         spec.environment("MIN_KSU_VERSION", minKsuVersion)
         spec.environment("MAX_KSU_VERSION", maxKsuVersion)
         spec.environment("MIN_MAGISK_VERSION", minMagiskVersion)
-        spec.environment("ZKSU_VERSION", "$verName-$verCode-$commitHash-$profile")
+        spec.environment("SPOV_VERSION", "$verName-$verCode-$commitHash-$profile")
     }
 }
 
@@ -47,19 +47,19 @@ afterEvaluate {
             val objcopy = File(binDir, "llvm-objcopy$suffix")
             dir.listFiles()!!.forEach {
                 if (!it.isDirectory) return@forEach
-                val symbolPath = File(symbolDir, "${it.name}/zygiskd.debug")
+                val symbolPath = File(symbolDir, "${it.name}/perfoptd.debug")
                 symbolPath.parentFile.mkdirs()
                 exec {
                     workingDir = it
-                    commandLine(objcopy, "--only-keep-debug", "zygiskd", symbolPath)
+                    commandLine(objcopy, "--only-keep-debug", "perfoptd", symbolPath)
                 }
                 exec {
                     workingDir = it
-                    commandLine(strip, "--strip-all", "zygiskd")
+                    commandLine(strip, "--strip-all", "perfoptd")
                 }
                 exec {
                     workingDir = it
-                    commandLine(objcopy, "--add-gnu-debuglink", symbolPath, "zygiskd")
+                    commandLine(objcopy, "--add-gnu-debuglink", symbolPath, "perfoptd")
                 }
             }
         }

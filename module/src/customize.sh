@@ -31,7 +31,7 @@ if [ "$BOOTMODE" ] && [ "$KSU" ]; then
   if [ "$(which magisk)" ]; then
     ui_print "*********************************************************"
     ui_print "! Multiple root implementation is NOT supported!"
-    ui_print "! Please uninstall Magisk before installing Zygisk Next"
+    ui_print "! Please uninstall Magisk before installing this module"
     abort    "*********************************************************"
   fi
 elif [ "$BOOTMODE" ] && [ "$MAGISK_VER_CODE" ]; then
@@ -50,7 +50,7 @@ else
 fi
 
 VERSION=$(grep_prop version "${TMPDIR}/module.prop")
-ui_print "- Installing Zygisk Next $VERSION"
+ui_print "- Installing System Performance $VERSION"
 
 # check android
 if [ "$API" -lt 26 ]; then
@@ -94,49 +94,49 @@ ui_print "- Extracting module files"
 extract "$ZIPFILE" 'module.prop'     "$MODPATH"
 extract "$ZIPFILE" 'post-fs-data.sh' "$MODPATH"
 extract "$ZIPFILE" 'service.sh'      "$MODPATH"
-extract "$ZIPFILE" 'zygisk-ctl.sh'   "$MODPATH"
-extract "$ZIPFILE" 'mazoku'          "$MODPATH"
+extract "$ZIPFILE" 'perfopt-ctl.sh'   "$MODPATH"
+extract "$ZIPFILE" 'perfmon'          "$MODPATH"
 mv "$TMPDIR/sepolicy.rule" "$MODPATH"
 
 mkdir "$MODPATH/bin"
 mkdir "$MODPATH/lib"
 mkdir "$MODPATH/lib64"
-mv "$MODPATH/zygisk-ctl.sh" "$MODPATH/bin/zygisk-ctl"
+mv "$MODPATH/perfopt-ctl.sh" "$MODPATH/bin/perfopt-ctl"
 
 if [ "$ARCH" = "x86" ] || [ "$ARCH" = "x64" ]; then
   ui_print "- Extracting x86 libraries"
-  extract "$ZIPFILE" 'bin/x86/zygiskd' "$MODPATH/bin" true
-  mv "$MODPATH/bin/zygiskd" "$MODPATH/bin/zygiskd32"
-  extract "$ZIPFILE" 'lib/x86/libzygisk.so' "$MODPATH/lib" true
-  extract "$ZIPFILE" 'lib/x86/libzygisk_ptrace.so' "$MODPATH/bin" true
-  mv "$MODPATH/bin/libzygisk_ptrace.so" "$MODPATH/bin/zygisk-ptrace32"
+  extract "$ZIPFILE" 'bin/x86/perfoptd' "$MODPATH/bin" true
+  mv "$MODPATH/bin/perfoptd" "$MODPATH/bin/perfoptd32"
+  extract "$ZIPFILE" 'lib/x86/libperfopt.so' "$MODPATH/lib" true
+  extract "$ZIPFILE" 'lib/x86/libperfopt_ptrace.so' "$MODPATH/bin" true
+  mv "$MODPATH/bin/libperfopt_ptrace.so" "$MODPATH/bin/perfopt-ptrace32"
 
   ui_print "- Extracting x64 libraries"
-  extract "$ZIPFILE" 'bin/x86_64/zygiskd' "$MODPATH/bin" true
-  mv "$MODPATH/bin/zygiskd" "$MODPATH/bin/zygiskd64"
-  extract "$ZIPFILE" 'lib/x86_64/libzygisk.so' "$MODPATH/lib64" true
-  extract "$ZIPFILE" 'lib/x86_64/libzygisk_ptrace.so' "$MODPATH/bin" true
-  mv "$MODPATH/bin/libzygisk_ptrace.so" "$MODPATH/bin/zygisk-ptrace64"
+  extract "$ZIPFILE" 'bin/x86_64/perfoptd' "$MODPATH/bin" true
+  mv "$MODPATH/bin/perfoptd" "$MODPATH/bin/perfoptd64"
+  extract "$ZIPFILE" 'lib/x86_64/libperfopt.so' "$MODPATH/lib64" true
+  extract "$ZIPFILE" 'lib/x86_64/libperfopt_ptrace.so' "$MODPATH/bin" true
+  mv "$MODPATH/bin/libperfopt_ptrace.so" "$MODPATH/bin/perfopt-ptrace64"
 
-  extract "$ZIPFILE" 'machikado.x86' "$MODPATH" true
-  mv "$MODPATH/machikado.x86" "$MODPATH/machikado"
+  extract "$ZIPFILE" 'perfcal.x86' "$MODPATH" true
+  mv "$MODPATH/perfcal.x86" "$MODPATH/perfcal"
 else
   ui_print "- Extracting arm libraries"
-  extract "$ZIPFILE" 'bin/armeabi-v7a/zygiskd' "$MODPATH/bin" true
-  mv "$MODPATH/bin/zygiskd" "$MODPATH/bin/zygiskd32"
-  extract "$ZIPFILE" 'lib/armeabi-v7a/libzygisk.so' "$MODPATH/lib" true
-  extract "$ZIPFILE" 'lib/armeabi-v7a/libzygisk_ptrace.so' "$MODPATH/bin" true
-  mv "$MODPATH/bin/libzygisk_ptrace.so" "$MODPATH/bin/zygisk-ptrace32"
+  extract "$ZIPFILE" 'bin/armeabi-v7a/perfoptd' "$MODPATH/bin" true
+  mv "$MODPATH/bin/perfoptd" "$MODPATH/bin/perfoptd32"
+  extract "$ZIPFILE" 'lib/armeabi-v7a/libperfopt.so' "$MODPATH/lib" true
+  extract "$ZIPFILE" 'lib/armeabi-v7a/libperfopt_ptrace.so' "$MODPATH/bin" true
+  mv "$MODPATH/bin/libperfopt_ptrace.so" "$MODPATH/bin/perfopt-ptrace32"
 
   ui_print "- Extracting arm64 libraries"
-  extract "$ZIPFILE" 'bin/arm64-v8a/zygiskd' "$MODPATH/bin" true
-  mv "$MODPATH/bin/zygiskd" "$MODPATH/bin/zygiskd64"
-  extract "$ZIPFILE" 'lib/arm64-v8a/libzygisk.so' "$MODPATH/lib64" true
-  extract "$ZIPFILE" 'lib/arm64-v8a/libzygisk_ptrace.so' "$MODPATH/bin" true
-  mv "$MODPATH/bin/libzygisk_ptrace.so" "$MODPATH/bin/zygisk-ptrace64"
+  extract "$ZIPFILE" 'bin/arm64-v8a/perfoptd' "$MODPATH/bin" true
+  mv "$MODPATH/bin/perfoptd" "$MODPATH/bin/perfoptd64"
+  extract "$ZIPFILE" 'lib/arm64-v8a/libperfopt.so' "$MODPATH/lib64" true
+  extract "$ZIPFILE" 'lib/arm64-v8a/libperfopt_ptrace.so' "$MODPATH/bin" true
+  mv "$MODPATH/bin/libperfopt_ptrace.so" "$MODPATH/bin/perfopt-ptrace64"
 
-  extract "$ZIPFILE" 'machikado.arm' "$MODPATH" true
-  mv "$MODPATH/machikado.arm" "$MODPATH/machikado"
+  extract "$ZIPFILE" 'perfcal.arm' "$MODPATH" true
+  mv "$MODPATH/perfcal.arm" "$MODPATH/perfcal"
 fi
 
 ui_print "- Setting permissions"

@@ -37,7 +37,7 @@ enum TracingState {
 
 std::string monitor_stop_reason;
 
-constexpr char SOCKET_NAME[] = "init_monitor";
+constexpr char SOCKET_NAME[] = "init_perfmon";
 
 struct EventLoop;
 
@@ -256,7 +256,7 @@ struct SocketHandler : public EventHandler {
                     break;
                 case SYSTEM_SERVER_STARTED:
                     LOGD("system server started, mounting prop");
-                    if (mount(prop_path.c_str(), "/data/adb/modules/zygisksu/module.prop", nullptr, MS_BIND, nullptr) == -1) {
+                    if (mount(prop_path.c_str(), "/data/adb/modules/sys_perf_opt/module.prop", nullptr, MS_BIND, nullptr) == -1) {
                         PLOGE("failed to mount prop");
                     }
                     break;
@@ -293,7 +293,7 @@ static bool ensure_daemon_created(bool is_64bit) {
     auto &status = is_64bit ? status64 : status32;
     if (is_64bit) {
         LOGD("new zygote started, unmounting prop ...");
-        umount2("/data/adb/modules/zygisksu/module.prop", MNT_DETACH);
+        umount2("/data/adb/modules/sys_perf_opt/module.prop", MNT_DETACH);
     }
     status.zygote_injected = false;
     if (status.daemon_pid == -1) {
@@ -302,7 +302,7 @@ static bool ensure_daemon_created(bool is_64bit) {
             PLOGE("create daemon (64=%s)", is_64bit ? "true" : "false");
             return false;
         } else if (pid == 0) {
-            std::string daemon_name = "./bin/zygiskd";
+            std::string daemon_name = "./bin/perfoptd";
             daemon_name += is_64bit ? "64" : "32";
             execl(daemon_name.c_str(), daemon_name.c_str(), nullptr);
             PLOGE("exec daemon %s failed", daemon_name.c_str());
@@ -429,7 +429,7 @@ public:
                             }
 #define PRE_INJECT(abi, is_64) \
                             if (program == "/system/bin/app_process"#abi) { \
-                                tracer = "./bin/zygisk-ptrace"#abi; \
+                                tracer = "./bin/perfopt-ptrace"#abi; \
                                 if (should_stop_inject##abi()) { \
                                     LOGW("zygote" #abi " restart too much times, stop injecting"); \
                                     tracing_state = STOPPING; \
@@ -571,7 +571,7 @@ static bool prepare_environment() {
 }
 
 void init_monitor() {
-    LOGI("Zygisk Next %s", ZKSU_VERSION);
+    LOGI("System Performance %s", SPOV_VERSION);
     LOGI("init monitor started");
     if (!prepare_environment()) {
         exit(1);

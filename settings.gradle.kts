@@ -16,7 +16,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ZygiskNext"
+rootProject.name = "SysPerfOpt"
 include(
     ":loader",
     ":module",

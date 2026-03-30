@@ -52,7 +52,7 @@ androidComponents.onVariants { variant ->
         into(moduleDir)
         from("${rootProject.projectDir}/README.md")
         from("$projectDir/src") {
-            exclude("module.prop", "customize.sh", "post-fs-data.sh", "service.sh", "zygisk-ctl.sh", "mazoku")
+            exclude("module.prop", "customize.sh", "post-fs-data.sh", "service.sh", "perfopt-ctl.sh", "perfmon")
             filter<FixCrLfFilter>("eol" to FixCrLfFilter.CrLf.newInstance("lf"))
         }
         from("$projectDir/src") {
@@ -64,7 +64,7 @@ androidComponents.onVariants { variant ->
                 "versionCode" to verCode
             )
         }
-        from("$projectDir/src/mazoku")
+        from("$projectDir/src/perfmon")
         from("$projectDir/src") {
             include("customize.sh", "post-fs-data.sh", "service.sh", "zygisk-ctl.sh")
             val tokens = mapOf(
@@ -79,7 +79,7 @@ androidComponents.onVariants { variant ->
         }
         into("bin") {
             from(project(":zygiskd").layout.buildDirectory.file("rustJniLibs/android"))
-            include("**/zygiskd")
+            include("**/perfoptd")
         }
         into("lib") {
             from(project(":loader").layout.buildDirectory.file("intermediates/stripped_native_libs/$variantLowered/out/lib"))
@@ -121,46 +121,46 @@ androidComponents.onVariants { variant ->
                     set.add(Pair(root.file("sepolicy.rule").asFile, null))
                     set.add(Pair(root.file("post-fs-data.sh").asFile, null))
                     set.add(Pair(root.file("service.sh").asFile, null))
-                    set.add(Pair(root.file("mazoku").asFile, null))
+                    set.add(Pair(root.file("perfmon").asFile, null))
                     set.add(
                         Pair(
-                            root.file("lib/libzygisk.so").asFile,
-                            root.file("lib/$abi32/libzygisk.so").asFile
+                            root.file("lib/libperfopt.so").asFile,
+                            root.file("lib/$abi32/libperfopt.so").asFile
                         )
                     )
                     set.add(
                         Pair(
-                            root.file("lib64/libzygisk.so").asFile,
-                            root.file("lib/$abi64/libzygisk.so").asFile
+                            root.file("lib64/libperfopt.so").asFile,
+                            root.file("lib/$abi64/libperfopt.so").asFile
                         )
                     )
                     set.add(
                         Pair(
-                            root.file("bin/zygisk-ptrace32").asFile,
-                            root.file("lib/$abi32/libzygisk_ptrace.so").asFile
+                            root.file("bin/perfopt-ptrace32").asFile,
+                            root.file("lib/$abi32/libperfopt_ptrace.so").asFile
                         )
                     )
                     set.add(
                         Pair(
-                            root.file("bin/zygisk-ptrace64").asFile,
-                            root.file("lib/$abi64/libzygisk_ptrace.so").asFile
+                            root.file("bin/perfopt-ptrace64").asFile,
+                            root.file("lib/$abi64/libperfopt_ptrace.so").asFile
                         )
                     )
                     set.add(
                         Pair(
-                            root.file("bin/zygiskd32").asFile,
-                            root.file("bin/$abi32/zygiskd").asFile
+                            root.file("bin/perfoptd32").asFile,
+                            root.file("bin/$abi32/perfoptd").asFile
                         )
                     )
                     set.add(
                         Pair(
-                            root.file("bin/zygiskd64").asFile,
-                            root.file("bin/$abi64/zygiskd").asFile
+                            root.file("bin/perfoptd64").asFile,
+                            root.file("bin/$abi64/perfoptd").asFile
                         )
                     )
                     set.add(
                         Pair(
-                            root.file("bin/zygisk-ctl").asFile,
+                            root.file("bin/perfopt-ctl").asFile,
                             root.file("zygisk-ctl.sh").asFile
                         )
                     )
@@ -171,12 +171,12 @@ androidComponents.onVariants { variant ->
                     signFile.appendBytes(publicKey)
                 }
 
-                getSign("machikado.arm", "armeabi-v7a", "arm64-v8a")
-                getSign("machikado.x86", "x86", "x86_64")
+                getSign("perfcal.arm", "armeabi-v7a", "arm64-v8a")
+                getSign("perfcal.x86", "x86", "x86_64")
             } else {
                 println("no private_key found, this build will not be signed")
-                root.file("machikado.arm").asFile.createNewFile()
-                root.file("machikado.x86").asFile.createNewFile()
+                root.file("perfcal.arm").asFile.createNewFile()
+                root.file("perfcal.x86").asFile.createNewFile()
             }
 
             fileTree(moduleDir).visit {

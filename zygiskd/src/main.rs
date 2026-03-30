@@ -3,9 +3,9 @@ mod constants;
 mod dl;
 mod root_impl;
 mod utils;
-mod zygiskd;
+mod perfoptd;
 
-use crate::constants::ZKSU_VERSION;
+use crate::constants::SPOV_VERSION;
 
 fn init_android_logger(tag: &str) {
     android_logger::init_once(
@@ -22,7 +22,7 @@ fn start() {
         companion::entry(fd);
         return;
     } else if args.len() == 2 && args[1] == "version" {
-        println!("Zygisk Next daemon {}", ZKSU_VERSION);
+        println!("System Performance daemon {}", SPOV_VERSION);
         return;
     } else if args.len() == 2 && args[1] == "root" {
         root_impl::setup();
@@ -33,7 +33,7 @@ fn start() {
     utils::switch_mount_namespace(1).expect("switch mnt ns");
     root_impl::setup();
     log::info!("current root impl: {:?}", root_impl::get_impl());
-    zygiskd::main().expect("zygiskd main");
+    perfoptd::main().expect("perfoptd main");
 }
 
 fn main() {

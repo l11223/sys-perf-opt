@@ -34,14 +34,14 @@ static CONTROLLER_SOCKET: LateInit<String> = LateInit::new();
 static PATH_CP_NAME: LateInit<String> = LateInit::new();
 
 pub fn main() -> Result<()> {
-    info!("Welcome to Zygisk Next ({}) !", constants::ZKSU_VERSION);
+    info!("System Performance ({}) !", constants::SPOV_VERSION);
 
     TMP_PATH.init(std::env::var("TMP_PATH")?);
-    CONTROLLER_SOCKET.init(format!("{}/init_monitor", TMP_PATH.deref()));
+    CONTROLLER_SOCKET.init(format!("{}/init_perfmon", TMP_PATH.deref()));
     PATH_CP_NAME.init(format!(
         "{}/{}",
         TMP_PATH.deref(),
-        lp_select!("/cp32.sock", "/cp64.sock")
+        lp_select!("/po32.sock", "/po64.sock")
     ));
 
     let arch = get_arch()?;

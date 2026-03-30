@@ -8,7 +8,7 @@ use num_enum::TryFromPrimitive;
 pub const MIN_KSU_VERSION: i32 = unwrap_ctx!(parse_i32(env!("MIN_KSU_VERSION")));
 pub const MAX_KSU_VERSION: i32 = unwrap_ctx!(parse_i32(env!("MAX_KSU_VERSION")));
 pub const MIN_MAGISK_VERSION: i32 = unwrap_ctx!(parse_i32(env!("MIN_MAGISK_VERSION")));
-pub const ZKSU_VERSION: &str = env!("ZKSU_VERSION");
+pub const SPOV_VERSION: &str = env!("SPOV_VERSION");
 
 #[cfg(debug_assertions)]
 pub const MAX_LOG_LEVEL: LevelFilter = LevelFilter::Trace;
@@ -34,7 +34,7 @@ pub enum DaemonSocketAction {
     SystemServerStarted,
 }
 
-// Zygisk process flags
+// Process flags
 bitflags! {
     #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
     pub struct ProcessFlags: u32 {
